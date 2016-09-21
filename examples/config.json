@@ -1,0 +1,14 @@
+{
+"context_file": "contexts.json",
+"annotators": {
+        "_default": {
+            "words": [
+                ["Optimointisetti", -1, 0, "devpool.words"],
+                ["Evaluaatiosetti", -1, 0, "testpool.words"],
+                ["Valittuja opetussanoja", -1, 0, "0.selected.words"]
+            ],
+            "seen_words_file": "None",
+            "iter": 0
+        }
+    }
+}
