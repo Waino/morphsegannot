@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Käyttöohjeet morfologisen segmentoinnin annotointityökalulle</title>
+<link type="text/css" href="css/doc.css" rel="stylesheet"/>
+<meta charset='utf-8'>
+</head>
+<body>
+
+<h1>Käyttöohjeet morfologisen segmentoinnin annotointityökalulle</h1>
+<p>
+Esitä mahdolliset kysymykset osoitteeseen <a href="mailto:stig-arne.gronroos@aalto.fi">stig-arne.gronroos@aalto.fi</a>&nbsp;.
+</p>
+
+<h2>Kerättävä data</h2>
+
+<h3>Segmentaatiot</h3>
+
+<p>
+Tarkoituksena on kerätä sanamuotojen morfologisia pintasegmentaatioita,
+eli jakaa annetut sanat morfeemien pintamuotoja vastaaviin osiin.
+</p>
+
+<h3>Morfikategoriat</h3>
+
+<p>
+Lisäksi jokaiseen morfiin on tarkoitus liittää yksi kolmesta kategoriasta:
+etuliite (prefiksi, PRE), sanavartalo (stem, STM), tai jälkiliite (suffiksi, SUF).
+(Yhdys)sanassa voi olla useita sanavartaloita.
+Sanavartaloa voi edeltää monta etuliitettä ja seurata monta jälkiliitettä.
+</p><p>
+Prefikseiksi on tarkoitus merkitä sanavartaloa edeltävät sitä muokkaavat morfit.
+Toisessa sanamuodossa samanmuotoinen morfi saattaa olla sanavartalon roolissa.
+Erityisesti tulee huomoida, että prefiksiä ei voi välittömästi seurata suffiksi,
+joten näissä tapauksissa edeltävän morfin on oltava sanavartalo eikä prefiksi,
+vaikka samanmuotoinen morfi jossain toisessa sanamuodossa olisi esiintynyt prefiksinä.
+Suffikseilla tarkoitetaan sekä taivutus- että johdospäätteitä.
+</p>
+
+<h3>Lausekontekstit</h3>
+
+<p>
+Annotoitavat sanamuodot esitetään lausekonteksteissa.
+Kontekstien tarkoitus on helpottaa morfologisesti monitulkintaisten sanamuotojen analysointia.
+</p><p>
+Kontekstit esitetään muokatussa, tokenisoidussa muodossa.
+Lausekontekstit jossa kuvien (Fig 2-4) esimerkkisana esiintyy olivat alkuperäisessä muodossaan:
+<i>Viiden kilometrin kilpailussa hän jäi neljänneksi 0,08 sekunnin erolla
+pronssille hiihtäneestä Helena Sikolovásta.</i>
+ja
+<i>Norjan jälkeen Italia oli neljäntenä - 2,3 sekuntia ykkösenä hiihtäneestä Venäjästä.</i>
+Huomaa, että tokenisoinnin jälkeen isot kirjaimet on muunnettu pieniksi kirjaimiksi,
+ja kokonaan numeroista ja/tai välimerkeistä koostuvat osat on poistettu.
+Lauseet on myös typistetty mahtumaan paremmin ruudulle.
+</p>
+
+<h3>Annotaatio-iteraation vaiheet</h3>
+
+<p>
+Tutkimuskysymys on miten nopeasti puoliohjatun Morfessorin avulla saa aikaan kohtuullisen tarkkaa
+morfologista pilkontaa uudelle kielelle.
+Toteutustapa on active learning -tyylinen, eli annotointi tapahtuu useassa iteraatiossa,
+niin että seuraavan iteraation annotoitavat sanat valitaan käyttäen hyväksi edellisen mallin tuloksia.
+Iteraatioiden lukumäärää ei ole päätetty etukäteen,
+vaan lopettaminen tapahtuu kun malli on oppinut riittävän hyvin tai aika loppuu kesken.
+</p>
+
+<p>
+Koska emme tiedä kuinka nopeata annotointi on, iteraatiossa annotoitavat sanat on jaettu kolmeen vaiheeseen:
+</p>
+<ol>
+<li>Viisikymmentä sattumanvaraisesti valittua sanaa evaluaatiodatasta.
+Näille sanoille ei ehdoteta segmentaatiota lainkaan (sanassa ei aluksi ole morfirajoja merkitty),
+vaan annotoija saa täysin itsenäisesti päätellä oikean segmentoinnin.
+Näitä sanoja käytetään opetetun mallin evaluoinnissa.</li>
+<li>Viisikymmentä algoritmisesti valittua sanaa opetusdatasta.
+Näitä sanoja käytetään mallin opettamisessa.
+Sanat näytetään valmiiksi segmentoituina:
+työkalu ehdottaa edellisessä iteraatiossa opetetun mallin tuottamaa segmentaatiota.</li>
+<li>Kolmannessa vaiheessa voit jatkaa evaluaatiodatan annotoimista niin kauan kuin haluat.
+Mitä enemmän evaluaatiodataa on käytettävissä, sitä luotettavampaan tulokseen päästään.
+</li>
+</ol>
+<p>
+Annotoi joka iteraatiossa vähintään 100 sanaa (vaiheet 1 ja 2),
+koska vasta toisen vaiheen päätyttyä voimme aloittaa seuraavan mallin opettamisen.
+</p>
+
+<img src="images/06_status.png " alt="Status" class="small"/>
+<span class="caption">Fig 1: Oikeassa ylänurkassa näkyy iteraation vaiheet.
+Tässä ollaan iteraation alussa: yhtään sanaa ei ole vielä annotoitu,
+eikä yhdenkään sanan yli ole hypätty.
+Jäljellä on 20 sanaa ensimmäisessä evaluaatiosanavaiheessa, 20 sanaa opetussanavaiheessa,
+ja lisäksi löytyy vielä 980 potentiaalista evaluaatiosanaa.
+Kaikkia evaluaatiosanoja ei toki ole tarkoitus annotoida tällä istumalla.
+(Esimerkissä oli listan pituutena 20 eikä nykyinen 50).
+</span>
+
+<h2>Työkalun toiminnot</h2>
+
+<h3>Kirjautuminen sisään</h3>
+
+<p>
+Ensin kysytään (kaikille yhteistä) käyttäjätunnus/salasana yhdistelmää.
+Seuraavaksi pyydetään syöttämään sähköpostiosoite.
+Kenttään syötettyä tekstiä käytetään tunnistamaan eri annotoijat ja pitämään kirjaa edistymisestä.
+Oikeastaan mikä tahansa uniikki teksti kävisi, mutta sähköpostiosoitteen avulla voin ongelmatapauksissa ottaa yhteyttä.
+</p><p>
+Jos keskeytät annotoinnin välillä, voit jatkaa siitä mihin jäit käyttämällä samaa säkhköpostiosoitetta uudestaan.
+</p>
+
+<h3>Segmentoinnin syöttäminen</h3>
+
+<p>
+Sanan annotointi on jaettu kahteen osaan: segmentoinnin syöttämiseen ja tagien syöttämiseen.
+</p>
+
+<img src="images/01_unsegmented.png" alt="Ei segmentointia" />
+<span class="caption">Fig 2: Segmentointityökalu. Sanaan ei ole lisätty morfirajoja vielä.</span>
+<p>
+Segmentointi aloitetaan segmentoimattomasta (evaluaatiosanojen tapauksessa) sanamuodosta
+tai ehdotuksesta (opetussanojen tapauksessa).
+Voimassa olevat morfien rajat on merkitty harmaalla "&nbsp;+&nbsp;" symbolilla.
+Molemmissa tapauksissa muokkaaminen tapahtuu samalla tavalla:
+Rajaa edeltävän kirjaimen klikkaaminen lisää rajan jos sitä ei ennestään ole,
+tai poistaa rajan jos sellainen jo on.
+Ennen lisäämistä plus-merkki on vihreä, ja ennen poistamista punainen.
+</p>
+
+<img src="images/02_addingBoundary.png " alt="Morfirajan lisääminen" />
+<span class="caption">Fig 3: Käyttäjä on lisäämässä morfirajaa klikkaamalla e-kirjainta.
+Yksi raja on lisätty aiemmin.</span>
+<img src="images/03_removingBoundary.png " alt="Morfirajan poistaminen" />
+<span class="caption">Fig 4: Käyttäjä on poistamassa morfirajaa.</span>
+<p>
+Kaikki ruudulla olevat rivit (kaikki sanan esiintymät eri konteksteissa),
+segmentoidaan samalla tavalla, eli riittää klikata yhtä sanoista.
+Jos eri konteksti-riveillä on eri lemmojen taivutusmuotoja,
+jotka tulee segmentoida eri tavoilla,
+klikkaa oikeassa laidassa olevaa "Eri paradigma" nappia näiden rivien kohdalta.
+Rivit poistetaan näytöltä, eikä sen jälkeen tehdyt annotoinnit enää vaikuta niihin.
+Myöhemmin nämä poistetut kontekstit näytetään uudelleen.
+</p><p>
+Jos ehdotettu segmentaatio on täysin pielessä, voit painaa "Poista morfirajat" -nappia,
+joka poistaa kaikki ruudulla olevat rajat helpottaen alusta aloittamista.
+</p><p>
+Korpuksessa on jonkun verran melua, pääasiassa vieraskielisiä sanoja, kirjainsekvenssejä
+ja mahdollisesti väärinkirjoituksia.
+Jos järjestelmä pyytää annotoimaan tällaisen kohdekieleen kuulumattoman sanan,
+paina "Tämä ei ole saamenkielen sana" -nappia.
+Jos epäilet väärinkirjoitusta,
+tarkista vielä lausekontekstia apuna käyttäen ettei kyseessä ole vain harvinainen sanamuoto jota et heti tunnista.
+</p><p>
+Työkalussa on myös "Hyppää yli" -nappi.
+Älä väärinkäytä tätä kaikkien vaikeiden sanojen yli hyppäämiseen
+(koska muuten dataan tulee vääristymää helppoja sanoja kohtaan).
+Tarkoituksena on että jos törmäät sanaan, jonka segmentoinnin haluat tarkistaa ennen annotaation syöttämistä,
+mutta haluat sitä ennen jatkaa muiden sanojen syöttämistä, tällä napilla se onnistuu.
+</p><p>
+Kun työkalussa on oikea segmentaatio ja vain oikeat kontekstirivit, paina "Hyväksy segmentaatio" -nappia.
+</p>
+<img src="images/07_buttons.png " alt="Toiminnot" />
+<span class="caption">Fig 5: Segmentaatiotyökalun toimintonapit</span>
+
+<h3>Tagien syöttäminen</h3>
+
+<p>
+Seuraavaksi edellä syötetyn segmentaation morfeille annetaan tagit.
+Poikkeuksellisesti tämä askel sivuutetaan jos segmentaatiossa oli vain yksi morfi,
+koska sen on oltava sanavartalo.
+</p><p>
+Kaikki morfit on alustavasti merkattu sanavartaloiksi (STM).
+Sinun tarvitsee siis vain merkata prefiksit ja suffiksit.
+"Hyväksy tagit" -nappi 
+<!--aktivoituu vasta kun kaikki morfit on merkitty,-->
+deaktivoituu jos tagisekvenssi ei ole sallittu (prefiksiä ei saa välittömästi seurata suffiksi).
+</p><p>
+Jos huomaat, että segmentaatio olikin väärin, voit vielä painaa "Takaisin segmentaatioon" muuttaaksesi sitä.
+</p>
+
+<img src="images/04_correctTagging.png " alt="Morfien tagit" />
+<span class="caption">Fig 6: Tagi-työkalu</span>
+<img src="images/05_incorrectTagging.png " alt="Kielletty tagisekvenssi" />
+<span class="caption">Fig 7: Kielletty tagisekvenssi</span>
+
+<p>
+Kiitos siitä että osallistut datankeruuseen!
+<span class="caption">- Stig-Arne Gr&ouml;nroos</span>
+</p>
+
+
+<noscript>This app requires javascript to function</noscript>
+
+</body>
+</html>

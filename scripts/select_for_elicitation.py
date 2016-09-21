@@ -214,7 +214,7 @@ def main(argv):
     else:
         oracle = set()
 
-    trainpool = tools.get_pools(['train'], args.pooldir).next()
+    trainpool = next(tools.get_pools(['train'], args.pooldir))
 
     # already selected words (incl nonwords) cannot be reselected
     trainpool = tools.filter_pool(trainpool, seen)
@@ -237,7 +237,7 @@ def main(argv):
     selection.write_scores(ranked, scores_filename)
 
     # apply representative sampling, if needed
-    if args.representative > 0:
+    if args.representative is not None and args.representative > 0:
         print('Performing representative sampling...')
         from morphsegannot.tools import representative
         truncated = [item.word for item in ranked[:args.representative]]

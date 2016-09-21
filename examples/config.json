@@ -5,10 +5,10 @@
             "words": [
                 ["Optimointisetti", -1, 0, "devpool.words"],
                 ["Evaluaatiosetti", -1, 0, "testpool.words"],
-                ["Valittuja opetussanoja", -1, 0, "0.selected.words"]
+                ["Valittuja opetussanoja", -1, 0, "1.train.ifsubstrings_5n.unseen.predictions"]
             ],
             "seen_words_file": "None",
-            "iter": 0
+            "iter": 1
         }
     }
 }

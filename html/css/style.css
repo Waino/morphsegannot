@@ -1,0 +1,114 @@
+body {
+    font-size: 18px;
+}
+
+.token {
+    font-size: 50px;
+}
+
+.row {
+    display: block;
+    border-bottom: 1px solid #eee;
+}
+
+#topcontrols {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.entry {
+    display: inline-block;
+    width: 90%;
+    width: calc(100% - 150px);
+}
+
+.lcontext {
+    text-align: right;
+}
+.lcontext, .rcontext {
+    width: 25%;
+}
+.lcontext, .token, .rcontext {
+    display: inline-block;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.token {
+    padding: 20px;
+}
+.data_two {
+        padding: 20px;
+}
+
+.split:after {
+    content: " + ";
+    color: #888;
+}
+
+.split:hover:after {
+    content: " + ";
+    color: #800;
+}
+
+.unsplit:hover:after {
+    content: " + ";
+    color: #080;
+}
+
+.tags {
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.tag {
+    display: block;
+    font-size: 20px;
+}
+
+.morph {
+    display: inline-block;
+    font-size: 50px;
+}
+
+.statusbox {
+    display: inline-block;
+    width: 50%;
+    font-size: 16px;
+}
+
+button.submit {
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.suppressed {
+    display: none;
+}
+
+.PRE {
+    text-decoration: underline;
+    color: #d000b0;
+}
+.STM {
+    font-weight: bold;
+    color: black;
+}
+.SUF {
+    font-style: italic;
+    color: green;
+}
+
+.morph input:not(:checked) + label {
+    color: black;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.illegal {
+    background-color: #daa;
+    font-weight: bold;
+}

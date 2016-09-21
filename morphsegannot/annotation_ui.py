@@ -11,8 +11,12 @@ from bottle import Bottle, auth_basic, request, run, static_file
 
 app = Bottle()
 
-real_static_dir = u'html/'
-real_data_dir = u'data/'
+package_dir = os.path.dirname(os.path.dirname(__file__))
+root_dir = os.path.dirname(package_dir)
+
+real_static_dir = package_dir + u'/html/'
+print(real_static_dir)
+real_data_dir = root_dir + u'/data/'
 input_dir = real_data_dir + u'input/'
 output_dir = real_data_dir + u'output/'
 user_dir = output_dir + u'users/'
@@ -27,6 +31,11 @@ logfobj = codecs.open(log_file, u'a', encoding=u'utf-8')
 
 default_context_len = 30
 
+###
+# XXX Hardcoded username and password
+# (these are placeholders, replace them)
+USERNAME = u'username'
+PASSWD = u'password'
 
 ### Annotator objects
 
@@ -170,9 +179,9 @@ def get_config():
     return config
 
 def check_pw(username, pw):
-    if username != u'morpho':
+    if username != USERNAME:
         return False
-    if pw != u'logical':
+    if pw != PASSWD:
         return False
     return True
 

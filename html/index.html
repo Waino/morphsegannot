@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Morphsegannot - Morphological segmentation annotator</title>
+<link type="text/css" href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div>Lue <a href="doc.html" target="_blank">ohjeet</a> ennen käyttöä.</div>
+
+<div id="topstatus"></div>
+<div id="topcontrols"></div>
+<div id="container"></div>
+<div id="bottomcontrols"></div>
+<noscript>This app requires javascript to function</noscript>
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript">
+app.initialize($("#container"), $('#topstatus'));
+app.add_controls($("#topcontrols"));
+app.add_controls($("#bottomcontrols"));
+</script>
+</body>
+</html>
