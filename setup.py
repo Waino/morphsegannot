@@ -30,7 +30,7 @@ setup(name='morphsegannot',
       ],
       license="BSD",
       scripts=[
-        'scripts/morphsegannot.py',
+        'morphsegannot/morphsegannot.py',
         'scripts/make_contexts.py',
         'scripts/new_annotations.py',
         'scripts/paste_annotations.py',
