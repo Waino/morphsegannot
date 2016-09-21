@@ -433,19 +433,19 @@ def mkdirs():
             os.makedirs(d)
 
 # Some globals
-
-config = None
-annotators = None
-
-segmentations = {}
-contexts_by_word = None
-contexts_by_id = {}
-
-# FIXME: this should be run once on app init
-config = get_config()
-annotators = AnnotatorFactory(config)
-contexts_by_word, contexts_by_id = read_contexts(config[u'context_file'])
-mkdirs()
-
 if __name__ == "__main__":
+
+    config = None
+    annotators = None
+
+    segmentations = {}
+    contexts_by_word = None
+    contexts_by_id = {}
+
+    # FIXME: this should be run once on app init
+    config = get_config()
+    annotators = AnnotatorFactory(config)
+    contexts_by_word, contexts_by_id = read_contexts(config[u'context_file'])
+    mkdirs()
+
     run(app, host="0.0.0.0", port=8080)
