@@ -29,7 +29,13 @@ setup(name='morphsegannot',
           'Topic :: Scientific/Engineering',
       ],
       license="BSD",
-      #scripts=['scripts/morphsegannot'],
+      scripts=[
+        'scripts/morphsegannot.py',
+        'scripts/make_contexts.py',
+        'scripts/new_annotations.py',
+        'scripts/paste_annotations.py',
+        'scripts/select_for_elicitation.py'
+        ],
       install_requires=requires,
       #extras_require={
       #    'docs': [l.strip() for l in open('docs/build_requirements.txt')]
