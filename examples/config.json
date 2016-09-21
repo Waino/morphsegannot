@@ -1,11 +1,11 @@
 {
-"context_file": "contexts.json",
+"context_file": "generated/contexts.json",
 "annotators": {
         "_default": {
             "words": [
-                ["Optimointisetti", -1, 0, "devpool.words"],
-                ["Evaluaatiosetti", -1, 0, "testpool.words"],
-                ["Valittuja opetussanoja", -1, 0, "1.train.ifsubstrings_5n.unseen.predictions"]
+                ["Optimointisetti", -1, 0, "input/devpool.words"],
+                ["Evaluaatiosetti", -1, 0, "input/testpool.words"],
+                ["Valittuja opetussanoja", -1, 1, "generated/1.train.ifsubstrings_5n.unseen.predictions"]
             ],
             "seen_words_file": "None",
             "iter": 1

@@ -17,12 +17,10 @@ root_dir = os.path.dirname(package_dir)
 real_static_dir = package_dir + u'/html/'
 print(real_static_dir)
 real_data_dir = root_dir + u'/data/'
-input_dir = real_data_dir + u'input/'
 output_dir = real_data_dir + u'output/'
 user_dir = output_dir + u'users/'
 
 config_file = u'{}config.json'.format(real_data_dir)
-context_file = u'{}contexts.json'.format(input_dir)
 
 log_file = u'{}{}.log'.format(
     output_dir,
@@ -84,7 +82,7 @@ class Annotator(object):
             output_dir, uid, self.config[u'iter'])
 
         self.seen_earlier = set(self.read_annotations(
-            u'{}{}'.format(input_dir, self.config[u'seen_words_file'])))
+            u'{}{}'.format(real_data_dir, self.config[u'seen_words_file'])))
         self.seen_now = set(self.read_annotations(self.annots_file))
 
         self.annotsfobj = None
@@ -111,7 +109,7 @@ class Annotator(object):
     def get_words(self):
         out = []
         for (name, truncate, suggest, filename) in self.config[u'words']:
-            filename = u'{}{}'.format(input_dir, filename)
+            filename = u'{}{}'.format(real_data_dir, filename)
             words = read_words(filename,
                                self.seen_earlier,
                                self.seen_now,
@@ -157,7 +155,7 @@ class Annotator(object):
     def stats(self):
         return {
             u'uid': self.uid,
-            u'iteration': self.config[u'iter'] + 1,  # 1-based indexing
+            u'iteration': self.config[u'iter'],
             u'annotated': len(self.seen_now)
             }
 
@@ -261,7 +259,7 @@ def get_words(uid):
 @app.get(u'/word/<word>')
 @auth_basic(check_pw)
 def get_word(word):
-    word = word.decode(u'utf-8')
+    #word = word.decode(u'utf-8')   # py2
     seg = segmentations.get(word, [word])
     boundaries = []
     for morph in seg:
@@ -309,15 +307,16 @@ def get_word(word):
 @auth_basic(check_pw)
 def log_endpoint(handle):
     log(request.remote_addr,
-        request.forms.get(u'uid').decode(u'utf-8'),
-        handle.decode(u'utf-8'),
-        request.forms.get(u'message').decode(u'utf-8'))
+        request.forms.get(u'uid'), #.decode(u'utf-8'),
+        handle, #.decode(u'utf-8'),
+        request.forms.get(u'message') #.decode(u'utf-8')
+        )
 
 @app.post(u'/word/<word>')
 @auth_basic(check_pw)
 def word_endpoint(word):
-    word = word.decode(u'utf-8')
-    uid = request.forms.get(u'uid').decode(u'utf-8')
+    #word = word.decode(u'utf-8')   # py2
+    uid = request.forms.get(u'uid') #.decode(u'utf-8')
     boundaries = json.loads(request.forms.get(u'boundaries'))
     tags = json.loads(request.forms.get(u'tags'))
     context_ids = json.loads(request.forms.get(u'contexts'))
@@ -348,8 +347,8 @@ def word_endpoint(word):
 @app.post(u'/nonword/<word>')
 @auth_basic(check_pw)
 def nonword(word):
-    word = word.decode(u'utf-8')
-    uid = request.forms.get(u'uid').decode(u'utf-8')
+    #word = word.decode(u'utf-8')
+    uid = request.forms.get(u'uid') #.decode(u'utf-8')
     log(request.remote_addr, uid, u'nonword', word)
 
     annotator = annotators.get(uid, request.remote_addr)
@@ -358,15 +357,15 @@ def nonword(word):
 @app.post(u'/skip/<word>')
 @auth_basic(check_pw)
 def skip(word):
-    word = word.decode(u'utf-8')
-    uid = request.forms.get(u'uid').decode(u'utf-8')
+    #word = word.decode(u'utf-8')
+    uid = request.forms.get(u'uid') #.decode(u'utf-8')
     log(request.remote_addr, uid, u'skip', word)
 
 @app.post(u'/sense/<context>')
 @auth_basic(check_pw)
 def sense(context):
-    context = context.decode(u'utf-8')
-    uid = request.forms.get(u'uid').decode(u'utf-8')
+    #context = context.decode(u'utf-8')
+    uid = request.forms.get(u'uid') #.decode(u'utf-8')
     log(request.remote_addr, uid, u'sense', context)
 
 @app.post(u'/b2seg/<word>')
@@ -374,8 +373,8 @@ def sense(context):
 def b2seg(word):
     """Hack to get log for intermediary result,
     and not to have to do as much string manipulation in js"""
-    word = word.decode(u'utf-8')
-    uid = request.forms.get(u'uid').decode(u'utf-8')
+    #word = word.decode(u'utf-8')
+    uid = request.forms.get(u'uid') #.decode(u'utf-8')
     boundaries = json.loads(request.forms.get(u'boundaries'))
     context_ids = json.loads(request.forms.get(u'contexts'))
     log(request.remote_addr, uid, u'b2seg', (word, boundaries, context_ids))
@@ -426,7 +425,7 @@ def read_words(infile,
     return words
 
 def read_contexts(infile):
-    infile = u'{}{}'.format(input_dir, infile)
+    infile = u'{}{}'.format(real_data_dir, infile)
     with codecs.open(infile, u'r', encoding=u'utf-8') as fobj:
         contexts_by_word = json.load(fobj)
     contexts_by_id = {}
