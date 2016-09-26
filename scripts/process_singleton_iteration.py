@@ -40,8 +40,11 @@ def write_both(pool, annots, basename):
         with open(basename, 'w') as unfobj:
             for word in pool:
                 if word not in annots:
+                    print('{} not in annots'.format(word))
                     continue
-                tagged = ','.join(annots[word])
+                analyses = [tools._format_analysis(analysis)
+                            for analysis in annots[word]]
+                tagged = ', '.join(analyses)
                 taggedfobj.write('{}\t{}\n'.format(word, tagged))
                 untagged = RE_UNTAG.sub('', tagged)
                 unfobj.write('{}\t{}\n'.format(word, untagged))
@@ -59,7 +62,7 @@ def main(argv):
     # make sure to allow multiple variants
     fnames = []
     for fname in os.listdir(args.logdir):
-        if fname.startwith('annotations_') and \
+        if fname.startswith('annotations_') and \
                 fname.endswith('_{}.txt'.format(iteration)):
             fnames.append(fname)
     if len(fnames) == 0:
@@ -95,7 +98,7 @@ def main(argv):
     selections = tools.read_wordlist(
         os.path.join(args.gendir,
         '{}.train.{}.all.selected'.format(iteration, metric)))
-    write_both(devpool, annots,
+    write_both(selections, annots,
                os.path.join(args.logdir,
                             '{}.{}.annots'.format(iteration, metric)))
 

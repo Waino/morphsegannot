@@ -32,8 +32,7 @@ setup(name='morphsegannot',
       scripts=[
         'morphsegannot/annotation_ui.py',
         'scripts/make_contexts.py',
-        'scripts/new_annotations.py',
-        'scripts/paste_annotations.py',
+        'scripts/process_singleton_iteration.py',
         'scripts/select_for_elicitation.py'
         ],
       install_requires=requires,
