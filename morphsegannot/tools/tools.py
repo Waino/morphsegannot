@@ -10,6 +10,10 @@ import unicodedata
 
 import flatcat
 
+# XXX hic sunt dracones
+# This is ugly and ugly and unnecessarily complex
+# I meant to rewrite as a saner version, but never got to it
+
 Context = collections.namedtuple('Context', ['left', 'word', 'right'])
 Pool = collections.namedtuple('Pool', ['id', 'metric', 'words'])
 Annotation = collections.namedtuple('Annotation', ['word', 'analysis'])
