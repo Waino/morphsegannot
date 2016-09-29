@@ -6,13 +6,17 @@ import datetime
 import hashlib
 import json
 import os
+import sys
 
 from bottle import Bottle, auth_basic, request, run, static_file
 
 app = Bottle()
 
-package_dir = os.path.dirname(os.path.dirname(__file__))
-root_dir = os.path.dirname(package_dir)
+if len(sys.argv) > 1:
+    root_dir = sys.argv[1]
+else:
+    root_dir = '.'
+package_dir = root_dir + '/morphsegannot'
 
 real_static_dir = package_dir + u'/html/'
 print(real_static_dir)
@@ -20,7 +24,7 @@ real_data_dir = root_dir + u'/data/'
 output_dir = real_data_dir + u'output/'
 user_dir = output_dir + u'users/'
 
-config_file = u'{}config.json'.format(real_data_dir)
+config_file = real_data_dir + 'config.json'
 
 log_file = u'{}{}.log'.format(
     output_dir,
