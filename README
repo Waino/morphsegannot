@@ -1,0 +1,100 @@
+morphsegannot - Active learning and annotation tool for morphological segmentation
+
+This code is published as is, despite being ugly and difficult to use.
+The author does NOT promise to support it in the future.
+
+Installation and usage instructions below the fold:
+
+---------------------------------------------------
+
+## create a virtual environment
+virtualenv -p python3 morphsegannot
+cd morphsegannot
+source bin/activate
+
+## clone git repositories
+git clone https://github.com/Waino/morphsegannot.git
+git clone https://github.com/aalto-speech/morfessor.git
+git clone https://github.com/aalto-speech/flatcat.git
+
+## install everything
+cd morphsegannot/
+python setup.py install
+cd ../morfessor/
+python setup.py install
+cd ../flatcat/
+python setup.py install
+cd ..
+
+## prepare the data directory
+mkdir -p data/input
+mkdir -p data/generated
+mkdir -p data/output
+cp -i morphsegannot/examples/config.json data/
+
+## place the data
+# put your tokenized, preprocessed corpus in
+#   data/input/corpus.txt
+# split your wordlist, and put the partitions in:
+#   data/input/trainpool.words
+#   data/input/devpool.words
+#   data/input/testpool.words
+
+## train initial unsupervised morfessor models
+morfessor-train --traindata-list data/input/trainpool.words -S data/generated/baseline.gz
+# note: a different perplexity theshold than 75 may be more suitable for your data
+PPL=75
+flatcat-train data/generated/baseline.gz -p ${PPL} -s data/generated/0.flatcat.tar.gz
+
+## select words to annotate using Initial/Final Substrings strategy
+# set the number of words to annotate using the -n flag
+select_for_elicitation.py 1 ifsubstrings_5n \
+    --model data/generated/0.flatcat.tar.gz \
+    -n 300 \
+    --pooldir data/input/ \
+    --outdir data/generated
+
+## extract sentence contexts
+make_contexts.py \
+    data/input/corpus.txt \
+    data/input/devpool.words \
+    data/input/testpool.words \
+    data/generated/1.train.ifsubstrings_5n.unseen.selected \
+    > data/generated/contexts.json
+
+## annotate
+annotation_ui.py
+# navigate your browser to http://localhost:8080/
+# hardcoded username and password are 'username' and 'password', unless you changed them
+
+## process collected annotations
+process_singleton_iteration.py
+
+# note: for potentially better results, optimize alpha for the unsupervised models at this point
+
+## train supervised morfessor models
+# note: these alpha values are examples only
+# the optimal value for your data may lie outside this range
+ALPHAS="0.3 0.5 0.7 0.9"
+# note: this heuristic beta formula is optimized for Finnish
+# you may want to include beta in your grid search
+U_SIZE=$(wc -l data/input/trainpool.words | cut -d ' ' -f 1)
+A_SIZE=$(wc -l data/output/1.ifsubstrings_5n.annots | cut -d ' ' -f 1)
+DEV_SIZE=$(wc -l data/output/dev.annots | cut -d ' ' -f 1)
+TEST_SIZE=$(wc -l data/output/test.annots | cut -d ' ' -f 1)
+echo "Data set sizes: unannotated ${U_SIZE} annotated ${A_SIZE} dev ${DEV_SIZE} test ${TEST_SIZE}"
+BETA=$(python -c "import math as m; print(int(m.exp(1.9+.8*m.log(${U_SIZE})+.6*m.log(${A_SIZE}))))")
+echo "Using beta ${BETA}"
+
+for ALPHA in ${ALPHAS}
+do
+    flatcat-train data/generated/0.flatcat.tar.gz -p ${PPL} \
+        -A data/output/1.ifsubstrings_5n.annots \
+        -w ${ALPHA} -W ${BETA} \
+        -s data/generated/1.flatcat.alpha${ALPHA}.beta${BETA}.tar.gz
+done
+
+## evaluate supervised models
+flatcat-evaluate --sample ${DEV_SIZE} --num-samples 1 \
+    data/output/dev.annots \
+    data/generated/1.flatcat.alpha*.tar.gz
