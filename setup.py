@@ -34,6 +34,7 @@ setup(name='morphsegannot',
         'scripts/make_contexts.py',
         'scripts/process_singleton_iteration.py',
         'scripts/select_for_elicitation.py'
+        'scripts/just_ifsubstrings.py'
         ],
       install_requires=requires,
       #extras_require={

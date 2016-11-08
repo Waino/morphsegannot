@@ -150,7 +150,7 @@ class IFSubstringMetric(AbstractMetric):
     maximizing the coverage of initial and final substrings.
     Already seen substrings are not rewarded.
     """
-    need_nbest = 1
+    need_nbest = 0
     need_forward = False
     descending = True
 
