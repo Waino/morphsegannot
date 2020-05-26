@@ -1,5 +1,12 @@
 morphsegannot - Active learning and annotation tool for morphological segmentation
 
+!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!
+This is an old codebase, which has not been updated for many years.
+It uses an old version of jQuery with known security issues,
+e.g. https://github.com/advisories/GHSA-jpcq-cgw6-v4j6
+You should NOT use this software without first adressing security.
+!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!
+
 This code is published as is, despite being ugly and difficult to use.
 The author does NOT promise to support it in the future.
 
